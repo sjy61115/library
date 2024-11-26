@@ -2,7 +2,7 @@
 <%@ page import="java.sql.*" %>
 <%
 // 관리자 권한 체크
-if (session.getAttribute("userRole") == null || !session.getAttribute("userRole").equals("ADMIN")) {
+if (session.getAttribute("role") == null || !session.getAttribute("role").equals("admin")) {
     response.sendRedirect("../login.jsp");
     return;
 }
@@ -43,5 +43,5 @@ try {
     e.printStackTrace();
 }
 
-response.sendRedirect("../template.jsp");
+response.sendRedirect("manageFeaturedBooks.jsp");
 %> 
