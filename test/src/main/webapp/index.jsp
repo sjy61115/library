@@ -9,15 +9,16 @@
     <style>
         :root {
             --header-bg: #2C2622;
-            --main-bg: #f9f1dd;
-            --text-light: #fbf1e1;
+            --main-bg: #fbf0df;
+            --text-light: #fbf0df;
             --text-dark: #292420;
             --accent: #D4AF37;
             --primary-color: #8B4513;
             --secondary-color: #DEB887;
             --nav-bg: rgba(246, 243, 238, 0.97);
             --quote-bg: #2C2622;
-            --quote-text: #faefdd;
+            --quote-text: #fbf0df;
+            --book-title-color: #8B4513;
         }
 
         * {
@@ -291,13 +292,14 @@
             margin-bottom: 20px;
         }
 
-        /* 입문 가이��� */
+        /* 입문 가이드 */
         .reading-path {
             padding: 100px 40px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(246, 243, 238, 0.9);
             backdrop-filter: blur(10px);
             margin: 80px 0;
             border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .path-steps {
@@ -313,13 +315,16 @@
             text-align: center;
             position: relative;
             padding: 30px;
-            background: rgba(255, 255, 255, 0.8);
+            background: #ffffff;
             border-radius: 15px;
             transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(139, 69, 19, 0.1);
         }
 
         .path-step:hover {
             transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         .step-number {
@@ -459,96 +464,181 @@
         .footer-section a:hover {
             color: var(--accent);
         }
+
+        .quote-author {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+
+        .quote-work {
+            color: var(--book-title-color);
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* 달의 위상 다이어그램 스타일 수정 */
+        .moon-diagram {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .moon-left {
+            top: 100px;
+            left: 50px;
+        }
+
+        .moon-right {
+            top: 600px;
+            right: 50px;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .moon-diagram.rotating {
+            animation: rotate 60s linear infinite;
+        }
+
+        /* 별자리 배경 요소 */
+        .constellation {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        /* 전체 컨테이너 스타일 추가 */
+        .page-container {
+            position: relative;
+            width: 100%;
+            overflow-x: hidden;
+        }
     </style>
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="#" class="logo">Classics</a>
-            <div class="nav-links">
-                <a href="#">Home</a>
-                <a href="#">Books</a>
-                <a href="#">Quotes</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-            </div>
+    <div class="page-container">
+        <!-- 배경 이미지 요소 추가 -->
+        <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-left">
+        <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-right">
+        <div class="constellation">
+            <!-- SVG나 이미지로 별자리 패턴 추가 가능 -->
         </div>
-    </nav>
-
-    <section class="hero">
-        <h1>시대를 초월한<br>지혜의 빛을 찾아서</h1>
-        <p>고전문학의 깊이 있는 세계로 당신을 초대합니다</p>
-        <a href="#" class="btn-primary">Begin the Journey</a>
-    </section>
-
-    <!-- 오늘의 명언 섹션 -->
-    <section class="quote-section">
-        <!-- 별똥별 효과 -->
-        <div class="shooting-star"></div>
-        <div class="shooting-star"></div>
         
-        <div class="quote-slider">
-            <div class="quote-content">
-                "책은 인생의 거울이다. 우리는 책을 통해 자신을 발견하고, 세상을 이해하게 된다."
+        <nav class="main-nav">
+            <div class="nav-container">
+                <a href="#" class="logo">Classics</a>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Books</a>
+                    <a href="#">Quotes</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </div>
             </div>
-            <div class="quote-author">빅토르 위고</div>
-            <div class="quote-work">레 미제라블</div>
-        </div>
-    </section>
+        </nav>
 
-    <!-- 입문자를 위한 추천 독서 경로 -->
-    <section class="reading-path container">
-        <div class="section-title">
-            <h2>고전문학 입문 가이드</h2>
-            <p>단계별로 쉽게 시작하는 고전문학 여행</p>
-        </div>
-        <div class="path-steps">
-            <div class="path-step">
-                <div class="step-number">1</div>
-                <h3>걸음</h3>
-                <p>짧은 명언과 인상적인 구절로 시작하기</p>
-            </div>
-            <div class="path-step">
-                <div class="step-number">2</div>
-                <h3>이해하기</h3>
-                <p>현대적 해석과 함께 읽기</p>
-            </div>
-            <div class="path-step">
-                <div class="step-number">3</div>
-                <h3>깊이 읽기</h3>
-                <p>원문으로 작품의 진수 느끼기</p>
-            </div>
-        </div>
-    </section>
+        <section class="hero">
+            <h1>시대를 초월한<br>지혜의 빛을 찾아서</h1>
+            <p>고전문학의 깊이 있는 세계로 당신을 초대합니다</p>
+            <a href="#" class="btn-primary">Begin the Journey</a>
+        </section>
 
-    <!-- 인상적인 구절 모음 -->
-    <section class="featured-passages">
-        <div class="container">
+        <!-- 오늘의 명언 섹션 -->
+        <section class="quote-section">
+            <!-- 별똥별 효과 -->
+            <div class="shooting-star"></div>
+            <div class="shooting-star"></div>
+            
+            <div class="quote-slider">
+                <div class="quote-content">
+                    "책은 인생의 거울이다. 우리는 책을 통해 자신을 발견하고, 세상을 이해하게 된다."
+                </div>
+                <div class="quote-author">빅토르 위고</div>
+                <div class="quote-work">레 미제라블</div>
+            </div>
+        </section>
+
+        <!-- 입문자를 위한 추천 독서 경로 -->
+        <section class="reading-path container">
             <div class="section-title">
-                <h2>인상적인 명문장</h2>
-                <p>고전문학의 아름다움을 한 문장으로 만나보세요</p>
+                <h2>고전문학 입문 가이드</h2>
+                <p>단계별로 쉽게 시작하는 고전문학 여행</p>
             </div>
-            <div class="passage-grid">
-                <div class="passage-card">
-                    <span class="difficulty-level level-easy">입문자 추천</span>
-                    <p>"진정한 사랑은 이성적인 판단이 아닌 마음의 선택이다."</p>
-                    <div class="quote-author">제인 오스틴</div>
-                    <div class="quote-work">오만과 편견</div>
+            <div class="path-steps">
+                <div class="path-step">
+                    <div class="step-number">1</div>
+                    <h3>입문</h3>
+                    <p>짧은 명언과 인상적인 구절로 시작하기</p>
                 </div>
-                <div class="passage-card">
-                    <span class="difficulty-level level-medium">중급</span>
-                    <p>"모든 행복한 가정은 서로 비슷하지만, 불행한 가정은 저마다 그 이유가 다르다."</p>
-                    <div class="quote-author">레프 톨스토이</div>
-                    <div class="quote-work">안나 카레니나</div>
+                <div class="path-step">
+                    <div class="step-number">2</div>
+                    <h3>이해하기</h3>
+                    <p>현대적 해석과 함께 읽기</p>
                 </div>
-                <div class="passage-card">
-                    <span class="difficulty-level level-hard">심화</span>
-                    <p>"인생에서 가장 큰 영광은 넘어지지 않는 것이 아니라, 매번 일어선다는  있다."</p>
-                    <div class="quote-author">공자</div>
-                    <div class="quote-work">논어</div>
+                <div class="path-step">
+                    <div class="step-number">3</div>
+                    <h3>깊이 읽기</h3>
+                    <p>원문으로 작품의 진수 느끼기</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- 인상적인 구절 모음 -->
+        <section class="featured-passages">
+            <div class="container">
+                <div class="section-title">
+                    <h2>인상적인 명문장</h2>
+                    <p>고전문학의 아름다움을 한 문장으로 만나보세요</p>
+                </div>
+                <div class="passage-grid">
+                    <div class="passage-card">
+                        <span class="difficulty-level level-easy">입문자 추천</span>
+                        <p>"진정한 사랑은 이성적인 판단이 아닌 마음의 선택이다."</p>
+                        <div class="quote-author">제인 오스틴</div>
+                        <div class="quote-work">오만과 편견</div>
+                    </div>
+                    <div class="passage-card">
+                        <span class="difficulty-level level-medium">중급</span>
+                        <p>"모든 행복한 가정은 서로 비슷하지만, 불행한 가정은 저마다 그 이유가 다르다."</p>
+                        <div class="quote-author">레프 톨스토이</div>
+                        <div class="quote-work">안나 카레니나</div>
+                    </div>
+                    <div class="passage-card">
+                        <span class="difficulty-level level-hard">심화</span>
+                        <p>"인생에서 가장 큰 영광은 넘어지지 않는 것이 아니라, 매번 일어선다는  있다."</p>
+                        <div class="quote-author">공자</div>
+                        <div class="quote-work">논어</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const moonLeft = document.querySelector('.moon-left');
+            const moonRight = document.querySelector('.moon-right');
+
+            // 회전 애니메이션만 추가
+            moonLeft.classList.add('rotating');
+            moonRight.classList.add('rotating');
+        });
+    </script>
 </body>
 </html>
