@@ -540,18 +540,8 @@
             <!-- SVG나 이미지로 별자리 패턴 추가 가능 -->
         </div>
         
-        <nav class="main-nav">
-            <div class="nav-container">
-                <a href="#" class="logo">Classics</a>
-                <div class="nav-links">
-                    <a href="#">Home</a>
-                    <a href="#">Books</a>
-                    <a href="#">Quotes</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
-                </div>
-            </div>
-        </nav>
+        <!-- 네비게이션 include -->
+        <jsp:include page="includes/nav.jsp" />
 
         <section class="hero">
             <h1>시대를 초월한<br>지혜의 빛을 찾아서</h1>
