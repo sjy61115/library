@@ -1,10 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/includes/dbConfig.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 추가</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
     <script>
     function validateBookForm() {
         var title = document.getElementById("title").value;
@@ -28,9 +32,28 @@
     </script>
 </head>
 <body>
+    <jsp:include page="includes/nav.jsp" />
+    
     <div class="container mt-5">
-        <h2>새로운 도서 추가</h2>
-        <form action="${pageContext.request.contextPath}/admin/processAddBook.jsp" method="post" 
+        <h2 class="mb-4">새로운 도서 추가</h2>
+        
+        <!-- 오류 메시지 표시 -->
+        <% if (session.getAttribute("error") != null) { %>
+            <div class="alert alert-danger">
+                <%= session.getAttribute("error") %>
+            </div>
+            <% session.removeAttribute("error"); %>
+        <% } %>
+        
+        <!-- 성공 메시지 표시 -->
+        <% if (session.getAttribute("message") != null) { %>
+            <div class="alert alert-success">
+                <%= session.getAttribute("message") %>
+            </div>
+            <% session.removeAttribute("message"); %>
+        <% } %>
+        
+        <form action="processAddBook.jsp" method="post" 
               enctype="multipart/form-data" onsubmit="return validateBookForm()">
             <div class="mb-3">
                 <label class="form-label">도서 제목</label>
@@ -45,7 +68,9 @@
             <div class="mb-3">
                 <label class="form-label">ISBN</label>
                 <input type="text" id="isbn" name="isbn" class="form-control" 
-                       pattern="\d{13}" title="13자리 숫자를 입력하세요" required>
+                       pattern="\d{13}" title="13자리 숫자를 입력하세요" 
+                       placeholder="13자리 ISBN을 입력하세요 (중복 불가)" required>
+                <div class="form-text">ISBN은 13자리 숫자이며, 이미 등록된 ISBN은 사용할 수 없습니다.</div>
             </div>
             
             <div class="mb-3">
@@ -120,8 +145,10 @@
             </div>
             
             <button type="submit" class="btn btn-primary">도서 등록</button>
-            <a href="${pageContext.request.contextPath}/admin/bookList.jsp" class="btn btn-secondary">취소</a>
+            <a href="./bookList.jsp" class="btn btn-secondary">취소</a>
         </form>
     </div>
+
+    <jsp:include page="includes/footer.jsp" />
 </body>
 </html>

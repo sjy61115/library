@@ -1,0 +1,85 @@
+/* 네비게이션 공통 스타일 */
+:root {
+    --header-bg: #2C2622;
+    --text-light: #fbf0df;
+    --text-dark: #292420;
+}
+
+.main-nav {
+    background: var(--header-bg);
+    padding: 20px 40px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(130, 111, 102, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 2.5em;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: -1px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1.1em;
+    position: relative;
+    padding: 5px 0;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--text-light);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+}
+
+footer {
+    padding-top: 100px;  /* footer 위쪽 여백 추가 */
+    background-color: #2C2622;
+    color: #fff;
+    padding-bottom: 20px;  /* 기존 아래쪽 패딩 유지 */
+    width: 100%;
+    position: relative;
+    bottom: 0;
+} 

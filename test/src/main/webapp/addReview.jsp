@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+ㄴ<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/includes/dbConfig.jsp" %>
 <%
     // 로그인 체크
     if(session.getAttribute("userId") == null) {
@@ -12,18 +12,10 @@
     String isbn = request.getParameter("isbn");
     int rating = Integer.parseInt(request.getParameter("rating"));
     String content = request.getParameter("content");
-    int userId = (Integer)session.getAttribute("userId");
-
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
+    int userId = Integer.parseInt(session.getAttribute("userId").toString());
 
     try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/library_db?useUnicode=true&characterEncoding=utf8",
-            "root", "1234"
-        );
+        conn = DriverManager.getConnection(url, username, password);
 
         // book_id 조회
         String bookSql = "SELECT id FROM books WHERE isbn = ?";

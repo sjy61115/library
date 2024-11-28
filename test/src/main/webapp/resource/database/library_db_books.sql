@@ -53,7 +53,7 @@ CREATE TABLE `famous_quotes` (
   `likes` int DEFAULT 0,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`quote_id`),
-  FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
+  FOREIGN KEY (`book_id`) REFERENCES `books` (`id`) ON DELETE CASCADE,
   INDEX `idx_book_quotes` (`book_id`),
   FULLTEXT INDEX `idx_quote_search` (`original_text`, `translated_text`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -70,8 +70,8 @@ CREATE TABLE `book_reviews` (
   `content` text NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`review_id`),
-  FOREIGN KEY (`book_id`) REFERENCES `books` (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+  FOREIGN KEY (`book_id`) REFERENCES `books` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --

@@ -3,23 +3,24 @@
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="java.io.*" %>
+<%@ include file="includes/dbConfig.jsp" %>
 
 <%
-    String jdbcUrl = "jdbc:mysql://localhost:3306/library_db?useUnicode=true&characterEncoding=utf8";
-    String dbUser = "root";
-    String dbPassword = "1234";
+    // 디버깅을 위한 로그 추가
+    System.out.println("processAddBook.jsp 시작");
     
     String uploadPath = application.getRealPath("/uploads");
+    System.out.println("업로드 경로: " + uploadPath);
+    
+    // uploads 폴더 생성 확인
     File uploadDir = new File(uploadPath);
     if (!uploadDir.exists()) {
-        uploadDir.mkdir();
+        boolean created = uploadDir.mkdir();
+        System.out.println("uploads 폴더 생성: " + created);
     }
     
     int maxSize = 10 * 1024 * 1024;
-    
-    Connection conn = null;
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
+    ResultSet generatedKeys = null;
     
     try {
         MultipartRequest multi = new MultipartRequest(
@@ -29,9 +30,28 @@
             "UTF-8",
             new DefaultFileRenamePolicy()
         );
+        System.out.println("파일 업로드 성공");
         
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
+        // 폼 데이터 확인
+        System.out.println("제목: " + multi.getParameter("title"));
+        System.out.println("저자: " + multi.getParameter("author"));
+        System.out.println("ISBN: " + multi.getParameter("isbn"));
+        
+        // ISBN 중복 체크
+        String isbn = multi.getParameter("isbn");
+        conn = DriverManager.getConnection(url, username, password);
+        
+        String checkSql = "SELECT COUNT(*) FROM books WHERE isbn = ?";
+        pstmt = conn.prepareStatement(checkSql);
+        pstmt.setString(1, isbn);
+        rs = pstmt.executeQuery();
+        
+        if (rs.next() && rs.getInt(1) > 0) {
+            session.setAttribute("error", "이미 등록된 ISBN입니다: " + isbn);
+            response.sendRedirect("addBook.jsp");
+            return;
+        }
+        
         conn.setAutoCommit(false);
         
         // 1. 도서 정보 입력
@@ -54,10 +74,10 @@
         pstmt.executeUpdate();
         
         // 생성된 book_id 가져오기
-        rs = pstmt.getGeneratedKeys();
+        generatedKeys = pstmt.getGeneratedKeys();
         int bookId = 0;
-        if (rs.next()) {
-            bookId = rs.getInt(1);
+        if (generatedKeys.next()) {
+            bookId = generatedKeys.getInt(1);
         }
         
         // 2. 명문장 정보 입력
@@ -87,15 +107,18 @@
         response.sendRedirect(request.getContextPath() + "/bookList.jsp");
         
     } catch(Exception e) {
+        System.out.println("오류 발생: " + e.getMessage());
+        e.printStackTrace();
         if (conn != null) {
             try {
                 conn.rollback();
             } catch(Exception ex) {}
         }
         session.setAttribute("error", "도서 등록 중 오류가 발생했습니다: " + e.getMessage());
-        response.sendRedirect(request.getContextPath() + "/admin/addBook.jsp");
+        response.sendRedirect(request.getContextPath() + "/addBook.jsp");
         
     } finally {
+        if (generatedKeys != null) try { generatedKeys.close(); } catch(Exception e) {}
         if (rs != null) try { rs.close(); } catch(Exception e) {}
         if (pstmt != null) try { pstmt.close(); } catch(Exception e) {}
         if (conn != null) {

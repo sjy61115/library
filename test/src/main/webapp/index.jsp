@@ -3,19 +3,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>세계 고전문학 추천</title>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
     <style>
         :root {
-            --header-bg: #2C2622;
             --main-bg: #fbf0df;
-            --text-light: #fbf0df;
             --text-dark: #292420;
             --accent: #D4AF37;
-            --primary-color: #8B4513;
-            --secondary-color: #DEB887;
-            --nav-bg: rgba(246, 243, 238, 0.97);
             --quote-bg: #2C2622;
             --quote-text: #fbf0df;
             --book-title-color: #8B4513;
@@ -32,62 +29,6 @@
             background-color: var(--main-bg);
             color: var(--text-dark);
             line-height: 1.6;
-        }
-
-        /* 네비게이션 */
-        .main-nav {
-            background: var(--header-bg);
-            padding: 20px 40px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(130, 111, 102, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 2.5em;
-            color: var(--text-light);
-            text-decoration: none;
-            font-weight: 600;
-            letter-spacing: -1px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 40px;
-        }
-
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 1.1em;
-            position: relative;
-            padding: 5px 0;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--text-dark);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
         }
 
         /* 히어로 섹션 */
@@ -142,196 +83,89 @@
 
         .category-tag {
             padding: 10px 25px;
-            border: 1px solid var(--secondary-color);
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
             background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1.1em;
+            transition: all 0.3s ease;
             backdrop-filter: blur(5px);
         }
 
         .category-tag:hover {
-            background: var(--primary-color);
-            color: #fff;
+            background: var(--accent);
+            color: white;
         }
 
         /* 명언 섹션 */
         .quote-section {
-            background-color: var(--quote-bg);
-            background-image: url('./images/vintage-constellation.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            padding: 120px 40px;
+            background: var(--quote-bg);
+            color: var(--quote-text);
+            padding: 100px 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            margin: 60px 0;
-            min-height: 500px;
-        }
-
-        .quote-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(44, 38, 34, 0.7);
-            z-index: 1;
-        }
-
-        .quote-slider {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-            color: var(--quote-text);
         }
 
         .quote-content {
-            font-size: 2.5em;
-            line-height: 1.4;
-            margin-bottom: 30px;
+            font-size: 2em;
             font-style: italic;
-            font-weight: 300;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-            color: var(--quote-text);
+            margin-bottom: 20px;
+            font-family: 'Crimson Text', serif;
         }
 
         .quote-author {
             font-size: 1.2em;
-            margin-bottom: 8px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-            color: var(--quote-text);
+            margin-bottom: 10px;
         }
 
         .quote-work {
             font-size: 1em;
             opacity: 0.8;
-            font-style: italic;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-            color: var(--quote-text);
         }
 
-        /* 별똥별 애니메이션 효과 */
-        .shooting-star {
-            position: absolute;
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(90deg, #faefdd, transparent);
-            animation: shooting 3s infinite;
-            opacity: 0;
-        }
-
-        .shooting-star:nth-child(1) {
-            top: 20%;
-            left: -100px;
-            animation-delay: 0s;
-        }
-
-        .shooting-star:nth-child(2) {
-            top: 40%;
-            left: -100px;
-            animation-delay: 1.5s;
-        }
-
-        @keyframes shooting {
-            0% {
-                transform: translateX(0) rotate(-45deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(1000px) rotate(-45deg);
-                opacity: 0;
-            }
-        }
-
-        /* 책 그리드 */
-        .book-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            padding: 40px;
-        }
-
-        .book-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(222, 184, 135, 0.3);
-        }
-
-        .book-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .book-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        .book-info {
-            padding: 30px;
-        }
-
-        .book-title {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            color: var(--text-dark);
-        }
-
-        .book-author {
-            font-size: 1.2em;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-        }
-
-        /* 입문 가이드 */
+        /* 독서 경로 섹션 */
         .reading-path {
             padding: 100px 40px;
-            background: rgba(246, 243, 238, 0.9);
-            backdrop-filter: blur(10px);
-            margin: 80px 0;
-            border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .section-title {
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.2em;
+            opacity: 0.8;
         }
 
         .path-steps {
             display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin-top: 50px;
+            justify-content: center;
             gap: 40px;
+            flex-wrap: wrap;
         }
 
         .path-step {
             flex: 1;
-            text-align: center;
-            position: relative;
+            min-width: 250px;
+            max-width: 350px;
             padding: 30px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            transition: transform 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(139, 69, 19, 0.1);
-        }
-
-        .path-step:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
         }
 
         .step-number {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-color);
-            color: #fff;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -343,204 +177,130 @@
         /* 인상적인 구절 섹션 */
         .featured-passages {
             padding: 100px 40px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
+            background: var(--quote-bg);
+            color: var(--quote-text);
         }
 
         .passage-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
+            gap: 30px;
             margin-top: 50px;
         }
 
         .passage-card {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
             border-radius: 15px;
-            transition: transform 0.3s ease;
-            border: 1px solid rgba(139, 69, 19, 0.1);
-        }
-
-        .passage-card:hover {
-            transform: translateY(-10px);
+            backdrop-filter: blur(5px);
+            position: relative;
         }
 
         .difficulty-level {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 20px;
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            padding: 5px 15px;
+            border-radius: 15px;
             font-size: 0.9em;
-            margin-bottom: 20px;
         }
 
-        .level-easy {
-            background: rgba(139, 69, 19, 0.1);
-            color: var(--primary-color);
+        .level-easy { background: #28a745; }
+        .level-medium { background: #ffc107; }
+        .level-hard { background: #dc3545; }
+
+        /* 배경 이미지 스타일 */
+        .moon-diagram {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            opacity: 0.1;
+            pointer-events: none;
         }
 
-        .level-medium {
-            background: rgba(139, 69, 19, 0.2);
-            color: var(--primary-color);
+        .moon-left {
+            left: -400px;
+            top: -200px;
         }
 
-        .level-hard {
-            background: rgba(139, 69, 19, 0.3);
-            color: var(--primary-color);
+        .moon-right {
+            right: -400px;
+            bottom: -200px;
         }
 
-        /* 섹션 타이틀 */
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .section-title h2 {
-            font-size: 3em;
-            margin-bottom: 20px;
-            color: var(--text-dark);
-            font-weight: 600;
+        .rotating {
+            animation: rotate 60s linear infinite;
         }
 
-        .section-title p {
-            font-size: 1.4em;
-            color: var(--text-dark);
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3em;
+            }
+
+            .hero p {
+                font-size: 1.4em;
+            }
+
+            .search-bar input {
+                width: 90%;
+            }
+
+            .quote-content {
+                font-size: 1.5em;
+            }
+
+            .moon-diagram {
+                width: 400px;
+                height: 400px;
+            }
+
+            .moon-left {
+                left: -200px;
+                top: -100px;
+            }
+
+            .moon-right {
+                right: -200px;
+                bottom: -100px;
+            }
+        }
+
+        /* 전체 컨테이너 스타일 */
+        .page-container {
+            position: relative;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         /* 버튼 스타일 */
         .btn-primary {
             display: inline-block;
             padding: 15px 40px;
-            border: 2px solid var(--text-dark);
-            color: var(--text-dark);
+            background: var(--accent);
+            color: white;
             text-decoration: none;
+            border-radius: 30px;
             font-size: 1.2em;
             transition: all 0.3s ease;
-            border-radius: 30px;
-            background: transparent;
         }
 
         .btn-primary:hover {
-            background: var(--text-dark);
-            color: var(--bg-color);
-        }
-
-        /* 푸터 */
-        footer {
-            background: var(--text-dark);
-            padding: 100px 40px;
-            margin-top: 100px;
-            color: #fff;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 60px;
-        }
-
-        .footer-section h3 {
-            font-size: 1.4em;
-            margin-bottom: 30px;
-            color: var(--text-light);
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section li {
-            margin-bottom: 15px;
-        }
-
-        .footer-section a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: var(--accent);
-        }
-
-        .quote-author {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-top: 15px;
-            opacity: 0.9;
-        }
-
-        .quote-work {
-            color: var(--book-title-color);
-            font-style: italic;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-
-        /* 달의 위상 다이어그램 스타일 수정 */
-        .moon-diagram {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        .moon-left {
-            top: 100px;
-            left: 50px;
-        }
-
-        .moon-right {
-            top: 600px;
-            right: 50px;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .moon-diagram.rotating {
-            animation: rotate 60s linear infinite;
-        }
-
-        /* 별자리 배경 요소 */
-        .constellation {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -2;
-            opacity: 0.1;
-            pointer-events: none;
-        }
-
-        /* 전체 컨테이너 스타일 추가 */
-        .page-container {
-            position: relative;
-            width: 100%;
-            overflow-x: hidden;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
     </style>
 </head>
 <body>
     <div class="page-container">
-        <!-- 배경 이미지 요소 추가 -->
         <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-left">
         <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-right">
-        <div class="constellation">
-            <!-- SVG나 이미지로 별자리 패턴 추가 가능 -->
-        </div>
         
-        <!-- 네비게이션 include -->
         <jsp:include page="includes/nav.jsp" />
 
         <section class="hero">
@@ -549,9 +309,7 @@
             <a href="#" class="btn-primary">Begin the Journey</a>
         </section>
 
-        <!-- 오늘의 명언 섹션 -->
         <section class="quote-section">
-            <!-- 별똥별 효과 -->
             <div class="shooting-star"></div>
             <div class="shooting-star"></div>
             
@@ -564,7 +322,6 @@
             </div>
         </section>
 
-        <!-- 입문자를 위한 추천 독서 경로 -->
         <section class="reading-path container">
             <div class="section-title">
                 <h2>고전문학 입문 가이드</h2>
@@ -589,7 +346,6 @@
             </div>
         </section>
 
-        <!-- 인상적인 구절 모음 -->
         <section class="featured-passages">
             <div class="container">
                 <div class="section-title">
@@ -611,7 +367,7 @@
                     </div>
                     <div class="passage-card">
                         <span class="difficulty-level level-hard">심화</span>
-                        <p>"인생에서 가장 큰 영광은 넘어지지 않는 것이 아니라, 매번 일어선다는  있다."</p>
+                        <p>"인생에서 가장 큰 영광은 넘어지지 않는 것이 아니라, 매번 일어선다는 데 있다."</p>
                         <div class="quote-author">공자</div>
                         <div class="quote-work">논어</div>
                     </div>
@@ -624,8 +380,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const moonLeft = document.querySelector('.moon-left');
             const moonRight = document.querySelector('.moon-right');
-
-            // 회전 애니메이션만 추가
             moonLeft.classList.add('rotating');
             moonRight.classList.add('rotating');
         });
