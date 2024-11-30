@@ -66,19 +66,32 @@
             background-color: rgba(212, 175, 55, 0.1);
         }
         
-        .btn-custom {
-            background-color: var(--header-bg);
-            color: var(--text-light);
+        .special-btn {
+            display: inline-block;
+            background-color: #8B4513;
+            color: #fff;
             border: none;
             padding: 8px 16px;
             border-radius: 4px;
             text-decoration: none;
             transition: all 0.3s ease;
+            font-size: 14px;
+            cursor: pointer;
         }
 
-        .btn-custom:hover {
-            background-color: var(--secondary-accent);
-            color: var(--text-light);
+        .special-btn:hover {
+            background-color: #6b3410;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .special-btn.btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-group .special-btn {
+            margin-right: 4px;
         }
     </style>
 </head>
@@ -107,7 +120,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="mb-0" style="color: var(--text-dark);">특집 페이지 목록</h3>
-                <a href="createSpecialPage.jsp" class="btn-custom">새 특집 페이지 추가</a>
+                <a href="createSpecialPage.jsp" class="special-btn">새 특집 페이지 추가</a>
             </div>
 
             <div class="table-responsive">
@@ -146,7 +159,7 @@
                                 <td><%= rs.getString("formatted_date") %></td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="editSpecialMenu.jsp?id=<%= rs.getInt("id") %>" class="btn-custom btn-sm">수정</a>
+                                        <a href="editSpecialMenu.jsp?id=<%= rs.getInt("id") %>" class="special-btn btn-sm">수정</a>
                                         <a href="manageFeaturedBooks.jsp?id=<%= rs.getInt("id") %>" class="btn btn-sm btn-success">도서 관리</a>
                                         <button onclick="deleteMenu(<%= rs.getInt("id") %>)" class="btn btn-sm btn-danger">삭제</button>
                                     </div>

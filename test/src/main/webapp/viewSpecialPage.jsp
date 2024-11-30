@@ -165,57 +165,158 @@
         }
 
         .book-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 30px;
-            margin-top: 30px;
+            margin: 40px auto;
+            justify-content: center;
         }
 
         .book-card {
-            background: rgba(255, 255, 255, 0.9);
+            flex: 0 0 calc(25% - 30px);
+            max-width: calc(25% - 30px);
+            margin: 0;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(222, 184, 135, 0.3);
+            box-shadow: 
+                0 5px 15px rgba(139, 69, 19, 0.1),
+                0 3px 6px rgba(0, 0, 0, 0.05);
+            transform: perspective(1000px) rotateX(0deg);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
         }
 
         .book-card:hover {
-            transform: translateY(-5px);
+            transform: perspective(1000px) rotateX(2deg) translateY(-10px);
+            box-shadow: 
+                0 15px 30px rgba(139, 69, 19, 0.15),
+                0 5px 10px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
         }
 
         .book-cover {
             width: 100%;
-            height: 400px;
+            height: 340px;
             object-fit: cover;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover .book-cover {
+            transform: scale(1.03);
         }
 
         .book-info {
             padding: 20px;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.95),
+                rgba(251, 240, 223, 0.95)
+            );
         }
 
         .book-info h3 {
-            color: var(--text-dark);
+            font-size: 1.2em;
             margin-bottom: 10px;
-            font-size: 1.4em;
+            line-height: 1.3;
+            color: var(--text-dark);
         }
 
         .author {
             color: var(--text-dark);
+            font-size: 0.9em;
             opacity: 0.8;
-            margin-bottom: 10px;
+            margin-top: 5px;
         }
 
         .description {
-            margin-bottom: 20px;
-            line-height: 1.6;
+            color: var(--text-dark);
+            font-style: italic;
+            margin-top: 8px;
+            line-height: 1.4;
+            opacity: 0.8;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 1200px) {
+            .book-card {
+                flex: 0 0 calc(33.333% - 20px);
+                max-width: calc(33.333% - 20px);
+            }
         }
 
         @media (max-width: 768px) {
-            .book-grid {
-                grid-template-columns: 1fr;
+            .book-card {
+                flex: 0 0 calc(50% - 15px);
+                max-width: calc(50% - 15px);
             }
-            
-            .book-cover {
-                height: 300px;
+        }
+
+        @media (max-width: 480px) {
+            .book-card {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* 배경 이미지 스타일 */
+        .special-page-container {
+            position: relative;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .moon-diagram {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .moon-left {
+            left: -400px;
+            top: -200px;
+        }
+
+        .moon-right {
+            right: -400px;
+            bottom: -200px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .rotating {
+            animation: rotate 60s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .moon-diagram {
+                width: 400px;
+                height: 400px;
+            }
+
+            .moon-left {
+                left: -200px;
+                top: -100px;
+            }
+
+            .moon-right {
+                right: -200px;
+                bottom: -100px;
             }
         }
     </style>
@@ -223,6 +324,7 @@
 <body>
     <jsp:include page="includes/nav.jsp" />
     
+
     <div class="special-page-container">
         <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-left">
         <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-right">
@@ -250,17 +352,19 @@
                     ResultSet featuredRs = featuredStmt.executeQuery();
                     while(featuredRs.next()) {
                 %>
-                    <div class="book-card">
-                        <img src="${pageContext.request.contextPath}/uploads/<%= featuredRs.getString("cover_image") %>" 
-                             alt="<%= featuredRs.getString("title") %>" class="book-cover">
+                    <a href="bookDetail.jsp?isbn=<%= featuredRs.getString("isbn") %>" class="book-card">
+                        <div class="book-cover-wrapper">
+                            <img src="uploads/<%= featuredRs.getString("cover_image") != null ? featuredRs.getString("cover_image") : "default-book.jpg" %>" 
+                                 class="book-cover" alt="<%= featuredRs.getString("title") %>의 표지">
+                        </div>
                         <div class="book-info">
                             <h3><%= featuredRs.getString("title") %></h3>
                             <p class="author"><%= featuredRs.getString("author") %></p>
-                            <p class="description"><%= featuredRs.getString("description") %></p>
-                            <a href="bookDetail.jsp?isbn=<%= featuredRs.getString("isbn") %>" 
-                               class="btn-classic">자세히 보기</a>
+                            <% if(featuredRs.getString("description") != null && !featuredRs.getString("description").isEmpty()) { %>
+                                <p class="description">"<%= featuredRs.getString("description") %>"</p>
+                            <% } %>
                         </div>
-                    </div>
+                    </a>
                 <%
                     }
                 }
@@ -272,5 +376,13 @@
     <jsp:include page="includes/footer.jsp" />
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const moonLeft = document.querySelector('.moon-left');
+            const moonRight = document.querySelector('.moon-right');
+            moonLeft.classList.add('rotating');
+            moonRight.classList.add('rotating');
+        });
+    </script>
 </body>
 </html> 

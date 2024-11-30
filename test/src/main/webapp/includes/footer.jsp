@@ -1,14 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<style>
+    footer {
+        padding: 20px 0;
+        text-align: center;
+        background-color: #2C2622;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .site-info {
+        color: #FDF5E6;
+        opacity: 0.8;
+        line-height: 1.6;
+    }
+
+    .site-info p {
+        margin: 5px 0;
+    }
+</style>
+
 <footer>
     <div class="footer-content">
         <div class="site-info">
-            <p>주소: 서울특별시 XX구 XX로 123</p>
-            <p>전화: 02-XXX-XXXX</p>
-            <p>이메일: library@example.com</p>
-            <p>운영시간: 09:00 - 18:00</p>
-            <p>휴일: 토요일 10:00 - 17:00</p>
-            <p>휴무일: 휴관</p>
+            <p>2024 지능웹설계 1195</p>
+            <p>경기대학교 컴퓨터공학전공 202111510 소병민</p>
         </div>
-        <p>© 2024 도서관. All rights reserved.</p>
     </div>
 </footer>

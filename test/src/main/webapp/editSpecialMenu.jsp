@@ -1,6 +1,126 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="includes/dbConfig.jsp" %>
-<%
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>특집 페이지 수정 | BOOKS</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
+    
+    <style>
+        :root {
+            --main-bg: #fbf0df;
+            --text-dark: #292420;
+            --accent: #D4AF37;
+            --primary-color: #8B4513;
+            --secondary-color: #DEB887;
+            --error-color: #dc3545;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--secondary-color);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+        }
+
+        .btn-classic {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-classic:hover {
+            background-color: #6b3410;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .featured-books {
+            background-color: rgba(251, 240, 223, 0.5);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .table th, .table td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .btn-danger {
+            background-color: var(--error-color);
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #bb2d3b;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <jsp:include page="includes/nav.jsp" />
+    
+    <%
     // 관리자 권한 체크
     if(session.getAttribute("role") == null || !"admin".equals(session.getAttribute("role"))) {
         response.sendRedirect("index.jsp");
@@ -35,10 +155,8 @@
             return;
         }
     }
-%>
-<jsp:include page="includes/nav.jsp" />
+    %>
 
-<div class="page-content">
     <div class="container">
         <h2 class="page-title">특집 페이지 수정</h2>
         
@@ -75,7 +193,8 @@
                     
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn-classic">저장</button>
-                        <a href="manageSpecialMenu.jsp" class="btn-classic" style="background-color: var(--secondary-color);">취소</a>
+                        <a href="manageSpecialMenu.jsp" class="btn-classic" 
+                           style="background-color: var(--secondary-color);">취소</a>
                     </div>
                 </form>
             </div>
@@ -87,7 +206,7 @@
                 <h3>특집 도서 관리</h3>
                 
                 <!-- 현재 등록된 특집 도서 목록 -->
-                <div class="featured-books mb-4">
+                <div class="featured-books">
                     <h4>등록된 도서</h4>
                     <div class="table-responsive">
                         <table class="table">
@@ -171,6 +290,7 @@
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

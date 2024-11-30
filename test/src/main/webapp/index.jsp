@@ -99,7 +99,13 @@
 
         /* 명언 섹션 */
         .quote-section {
-            background: var(--quote-bg);
+            background: linear-gradient(
+                rgba(44, 38, 34, 0.9),  /* var(--quote-bg)와 동일한 색상에 투명도 추가 */
+                rgba(44, 38, 34, 0.9)
+            ), url('${pageContext.request.contextPath}/images/vintage-constellation.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             color: var(--quote-text);
             padding: 100px 40px;
             text-align: center;
@@ -112,16 +118,11 @@
             font-style: italic;
             margin-bottom: 20px;
             font-family: 'Crimson Text', serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .quote-author {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-
-        .quote-work {
-            font-size: 1em;
-            opacity: 0.8;
+        .quote-author, .quote-work {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         /* 독서 경로 섹션 */
@@ -306,7 +307,7 @@
         <section class="hero">
             <h1>시대를 초월한<br>지혜의 빛을 찾아서</h1>
             <p>고전문학의 깊이 있는 세계로 당신을 초대합니다</p>
-            <a href="#" class="btn-primary">Begin the Journey</a>
+            <a href="recommendTest.jsp" class="btn-primary">Begin the Journey</a>
         </section>
 
         <section class="quote-section">
@@ -325,7 +326,7 @@
         <section class="reading-path container">
             <div class="section-title">
                 <h2>고전문학 입문 가이드</h2>
-                <p>단계별로 쉽게 시��하는 고전문학 여행</p>
+                <p>단계별로 쉽게 시하는 고전문학 여행</p>
             </div>
             <div class="path-steps">
                 <div class="path-step">

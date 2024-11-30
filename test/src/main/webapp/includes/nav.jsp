@@ -7,6 +7,7 @@
         <div class="nav-links">
             <a href="${pageContext.request.contextPath}/">Home</a>
             <a href="${pageContext.request.contextPath}/bookList.jsp">Books</a>
+            <a href="${pageContext.request.contextPath}/recommendTest.jsp">도서 추천</a>
             
             <!-- 특집 메뉴 드롭다운 -->
             <div class="custom-dropdown">
@@ -46,7 +47,6 @@
                         <%= session.getAttribute("username") %>
                     </button>
                     <ul class="custom-dropdown-menu">
-                        <li><a class="custom-dropdown-item" href="${pageContext.request.contextPath}/myPage.jsp">마이페이지</a></li>
                         <% if("admin".equals(session.getAttribute("role"))) { %>
                             <li><a class="custom-dropdown-item" href="${pageContext.request.contextPath}/dashboard.jsp">관리자</a></li>
                         <% } %>

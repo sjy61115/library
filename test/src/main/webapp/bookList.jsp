@@ -141,26 +141,48 @@
         }
 
         .book-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             border: 1px solid rgba(222, 184, 135, 0.3);
+            box-shadow: 
+                0 5px 15px rgba(139, 69, 19, 0.1),
+                0 3px 6px rgba(0, 0, 0, 0.05);
+            transform: perspective(1000px) rotateX(0deg);
             backdrop-filter: blur(10px);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
         }
 
         .book-card:hover {
-            transform: translateY(-10px);
+            transform: perspective(1000px) rotateX(2deg) translateY(-10px);
+            box-shadow: 
+                0 15px 30px rgba(139, 69, 19, 0.15),
+                0 5px 10px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
         }
 
         .book-cover {
             width: 100%;
             height: 400px;
             object-fit: cover;
+            border-bottom: 1px solid rgba(222, 184, 135, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .book-card:hover .book-cover {
+            transform: scale(1.03);
         }
 
         .book-info {
             padding: 25px;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.95),
+                rgba(251, 240, 223, 0.95)
+            );
         }
 
         .book-title {
@@ -277,10 +299,81 @@
             margin-right: 8px;
             font-size: 1.2em;
         }
+
+        .book-quote {
+            color: var(--text-dark);
+            font-style: italic;
+            margin: 15px 0;
+            line-height: 1.6;
+            opacity: 0.85;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.95em;
+            padding: 10px;
+            background: rgba(222, 184, 135, 0.1);
+            border-radius: 8px;
+        }
+
+        /* 배경 이미지 스타일 */
+        .page-container {
+            position: relative;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .moon-diagram {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .moon-left {
+            left: -400px;
+            top: -200px;
+        }
+
+        .moon-right {
+            right: -400px;
+            bottom: -200px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .rotating {
+            animation: rotate 60s linear infinite;
+        }
+
+        @media (max-width: 768px) {
+            .moon-diagram {
+                width: 400px;
+                height: 400px;
+            }
+
+            .moon-left {
+                left: -200px;
+                top: -100px;
+            }
+
+            .moon-right {
+                right: -200px;
+                bottom: -100px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="page-container">
+        <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-left">
+        <img src="${pageContext.request.contextPath}/images/bg-orbit.webp" alt="Moon Phases" class="moon-diagram moon-right">
         <jsp:include page="includes/nav.jsp" />
         
         <main class="book-list-container">
@@ -340,9 +433,12 @@
                     
                     // 도서 목록 조회
                     String sql = "SELECT b.*, " +
+                                "fq.original_text as quote, " +
                                 "(SELECT COUNT(*) FROM book_reviews br WHERE br.book_id = b.id) as review_count, " +
                                 "(SELECT AVG(rating) FROM book_reviews br WHERE br.book_id = b.id) as avg_rating " +
-                                "FROM books b ";
+                                "FROM books b " +
+                                "LEFT JOIN famous_quotes fq ON b.id = fq.book_id " +
+                                "AND fq.quote_id = (SELECT quote_id FROM famous_quotes WHERE book_id = b.id ORDER BY likes DESC LIMIT 1) ";
                     
                     conditions = new ArrayList<>();
                     if (searchKeyword != null && !searchKeyword.trim().isEmpty() || 
@@ -372,25 +468,16 @@
                     while(rs.next()) {
                         hasResults = true;
                 %>
-                        <div class="book-card">
+                        <a href="bookDetail.jsp?isbn=<%= rs.getString("isbn") %>" class="book-card">
                             <img src="uploads/<%= rs.getString("cover_image") != null ? rs.getString("cover_image") : "default-book.jpg" %>" 
                                  class="book-cover" alt="<%= rs.getString("title") %>의 표지">
                             <div class="book-info">
                                 <h3 class="book-title"><%= rs.getString("title") %></h3>
-                                <p class="book-meta">저자: <%= rs.getString("author") %></p>
-                                <p class="book-meta">장르: <%= getCategoryName(rs.getString("category")) %></p>
-                                <p class="book-meta">출판사: <%= rs.getString("publisher") %></p>
-                                <p class="book-meta">출판일: <%= rs.getDate("publish_date") %></p>
-                                <% if (rs.getInt("review_count") > 0) { %>
-                                    <p class="book-meta">
-                                        평점: <%= String.format("%.1f", rs.getDouble("avg_rating")) %> 
-                                        (리뷰 <%= rs.getInt("review_count") %>개)
-                                    </p>
+                                <% if(rs.getString("quote") != null) { %>
+                                    <p class="book-quote">"<%= rs.getString("quote") %>"</p>
                                 <% } %>
-                                <a href="bookDetail.jsp?isbn=<%= rs.getString("isbn") %>" 
-                                   class="detail-btn">상세보기</a>
                             </div>
-                        </div>
+                        </a>
                 <%
                     }
                     
@@ -430,5 +517,13 @@
         
         <jsp:include page="includes/footer.jsp" />
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const moonLeft = document.querySelector('.moon-left');
+            const moonRight = document.querySelector('.moon-right');
+            moonLeft.classList.add('rotating');
+            moonRight.classList.add('rotating');
+        });
+    </script>
 </body>
 </html>
