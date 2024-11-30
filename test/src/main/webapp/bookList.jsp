@@ -141,7 +141,8 @@
         }
 
         .book-card {
-            background: rgba(255, 255, 255, 0.95);
+            position: relative;
+            background: transparent;
             border-radius: 15px;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -154,6 +155,7 @@
             cursor: pointer;
             text-decoration: none;
             display: block;
+            height: auto;
         }
 
         .book-card:hover {
@@ -166,10 +168,13 @@
 
         .book-cover {
             width: 100%;
-            height: 400px;
-            object-fit: cover;
+            aspect-ratio: 3/4;
+            object-fit: contain;
+            background-color: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid rgba(222, 184, 135, 0.2);
             transition: transform 0.3s ease;
+            display: block;
+            padding: 10px;
         }
 
         .book-card:hover .book-cover {
@@ -183,6 +188,7 @@
                 rgba(255, 255, 255, 0.95),
                 rgba(251, 240, 223, 0.95)
             );
+            position: relative;
         }
 
         .book-title {
