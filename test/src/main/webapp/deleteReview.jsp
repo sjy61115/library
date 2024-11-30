@@ -1,68 +1,56 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+<%@ include file="includes/dbConfig.jsp" %>
 <%
-// 디버깅을 위한 출력
-System.out.println("=== 리뷰 삭제 처리 시작 ===");
+    // 로그인 체크
+    if(session.getAttribute("userId") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
 
-// 세션 체크
-int userId = session.getAttribute("userId") != null ? (Integer)session.getAttribute("userId") : 0;
-System.out.println("현재 로그인한 사용자 ID: " + userId);
-
-if(userId == 0) {
-    response.sendRedirect("login.jsp");
-    return;
-}
-
-String jdbcUrl = "jdbc:mysql://localhost:3306/library_db?useUnicode=true&characterEncoding=utf8";
-String dbUser = "root";
-String dbPassword = "1234";
-
-Connection conn = null;
-PreparedStatement pstmt = null;
-
-try {
-    // 리뷰 ID와 ISBN 파라미터 받기
-    int reviewId = Integer.parseInt(request.getParameter("reviewId"));
     String isbn = request.getParameter("isbn");
-    
-    System.out.println("삭제할 리뷰 ID: " + reviewId);
-    System.out.println("도서 ISBN: " + isbn);
-    
-    // DB 연결
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    conn = DriverManager.getConnection(jdbcUrl, dbUser, dbPassword);
-    
-    // 리뷰 삭제 쿼리 수정 - id를 review_id로 변경
-    String deleteSql = "DELETE FROM book_reviews WHERE review_id = ? AND user_id = ?";
-    pstmt = conn.prepareStatement(deleteSql);
-    pstmt.setInt(1, reviewId);
-    pstmt.setInt(2, userId);
-    
-    int result = pstmt.executeUpdate();
-    System.out.println("삭제 결과: " + result);
-    
-    if(result > 0) {
-        response.sendRedirect("bookDetail.jsp?isbn=" + isbn);
-    } else {
-        %>
-        <script>
-            alert("리뷰 삭제에 실패했습니다.");
-            location.href = "bookDetail.jsp?isbn=<%= isbn %>";
-        </script>
-        <%
+    int reviewId = Integer.parseInt(request.getParameter("review_id"));
+    int userId = Integer.parseInt(session.getAttribute("userId").toString());
+    String userRole = (String)session.getAttribute("role");
+    boolean isAdmin = "admin".equals(userRole);
+
+    try {
+        conn.setAutoCommit(false); // 트랜잭션 시작
+        
+        // 리뷰 작성자 또는 관리자 확인
+        String checkSql = "SELECT user_id FROM book_reviews WHERE review_id = ?";
+        pstmt = conn.prepareStatement(checkSql);
+        pstmt.setInt(1, reviewId);
+        rs = pstmt.executeQuery();
+
+        if(rs.next() && (rs.getInt("user_id") == userId || isAdmin)) {
+            // 리뷰 삭제
+            String deleteSql = "DELETE FROM book_reviews WHERE review_id = ?";
+            pstmt = conn.prepareStatement(deleteSql);
+            pstmt.setInt(1, reviewId);
+            int result = pstmt.executeUpdate();
+
+            if(result > 0) {
+                conn.commit();
+                session.setAttribute("message", "리뷰가 성공적으로 삭제되었습니다.");
+            } else {
+                conn.rollback();
+                session.setAttribute("error", "리뷰 삭제에 실패했습니다.");
+            }
+        } else {
+            conn.rollback();
+            session.setAttribute("error", "리뷰를 삭제할 권한이 없습니다.");
+        }
+
+    } catch(Exception e) {
+        if(conn != null) try { conn.rollback(); } catch(Exception ex) {}
+        e.printStackTrace();
+        session.setAttribute("error", "리뷰 삭제 중 오류가 발생했습니다: " + e.getMessage());
+    } finally {
+        if(conn != null) try { conn.setAutoCommit(true); } catch(Exception e) {}
+        if(rs != null) try { rs.close(); } catch(Exception e) {}
+        if(pstmt != null) try { pstmt.close(); } catch(Exception e) {}
+        if(conn != null) try { conn.close(); } catch(Exception e) {}
     }
     
-} catch(Exception e) {
-    System.out.println("오류 발생: " + e.getMessage());
-    e.printStackTrace();
-    %>
-    <script>
-        alert("리뷰 삭제 중 오류가 발생했습니다.");
-        history.back();
-    </script>
-    <%
-} finally {
-    if (pstmt != null) try { pstmt.close(); } catch(Exception e) {}
-    if (conn != null) try { conn.close(); } catch(Exception e) {}
-}
+    response.sendRedirect("bookDetail.jsp?isbn=" + isbn);
 %> 

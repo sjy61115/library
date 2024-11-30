@@ -1,11 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="includes/dbConfig.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>프로필 수정</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
 </head>
 <body>
+    <jsp:include page="includes/nav.jsp" />
+
     <div class="container mt-5">
         <h2>프로필 수정</h2>
         <form action="updateProfile.jsp" method="post" enctype="multipart/form-data">
@@ -35,5 +41,7 @@
             <a href="myPage.jsp" class="btn btn-secondary">취소</a>
         </form>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

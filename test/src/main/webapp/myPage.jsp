@@ -1,11 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="includes/dbConfig.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>마이페이지</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
 </head>
 <body>
+    <jsp:include page="includes/nav.jsp" />
+
     <div class="container mt-5">
         <h2>마이페이지</h2>
         
@@ -57,5 +63,7 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html> 

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
     <style>
         :root {
-            --main-bg: #fbf0df;
+            --main-bg: #fbf0df !important;
             --text-dark: #292420;
             --accent: #D4AF37;
             --quote-bg: #2C2622;
@@ -26,7 +26,7 @@
         }
 
         body {
-            background-color: var(--main-bg);
+            background-color: var(--main-bg) !important;
             color: var(--text-dark);
             line-height: 1.6;
         }
@@ -325,7 +325,7 @@
         <section class="reading-path container">
             <div class="section-title">
                 <h2>고전문학 입문 가이드</h2>
-                <p>단계별로 쉽게 시작하는 고전문학 여행</p>
+                <p>단계별로 쉽게 시��하는 고전문학 여행</p>
             </div>
             <div class="path-steps">
                 <div class="path-step">

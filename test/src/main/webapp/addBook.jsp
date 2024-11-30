@@ -9,6 +9,87 @@
     <title>도서 추가</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
+    <style>
+        :root {
+            --main-bg: #fbf0df;
+            --text-dark: #292420;
+            --accent: #D4AF37;
+            --primary-color: #8B4513;
+            --secondary-color: #DEB887;
+            --error-color: #dc3545;
+        }
+
+        body {
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-top: 80px;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+        }
+
+        .form-control, .form-select {
+            border: 1px solid var(--secondary-color);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: #6b3410;
+            border-color: #6b3410;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #c19a6b;
+            border-color: #c19a6b;
+            color: var(--text-dark);
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .card-header {
+            background-color: var(--secondary-color);
+            color: var(--text-dark);
+            border-bottom: none;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+    </style>
     <script>
     function validateBookForm() {
         var title = document.getElementById("title").value;
@@ -107,12 +188,6 @@
                           rows="5" required></textarea>
             </div>
             
-            <div class="mb-3">
-                <label class="form-label">목차</label>
-                <textarea name="contents" class="form-control" 
-                          rows="5" required></textarea>
-            </div>
-            
             <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="mb-0">명대사 입력</h5>
@@ -121,11 +196,6 @@
                     <div class="mb-3">
                         <label class="form-label">원문 *</label>
                         <textarea name="originalText" class="form-control" rows="3" required></textarea>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">번역문</label>
-                        <textarea name="translatedText" class="form-control" rows="3"></textarea>
                     </div>
                     
                     <div class="row">
@@ -137,10 +207,6 @@
                         </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label class="form-label">장면 설명</label>
-                        <textarea name="sceneDescription" class="form-control" rows="2"></textarea>
-                    </div>
                 </div>
             </div>
             

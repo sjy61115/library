@@ -1,16 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
-<%@ include file="/includes/dbConfig.jsp" %>
+<%@ include file="includes/dbConfig.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>도서 상세정보</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    <link href="https://webfontworld.github.io/gmarket/GmarketSans.css" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
+    <title>도서 상세 정보</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --main-bg: #fbf0df;
@@ -21,76 +16,52 @@
             --error-color: #dc3545;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'GmarketSans', sans-serif;
-        }
-
         body {
             background-color: var(--main-bg);
             color: var(--text-dark);
             line-height: 1.6;
+            padding-top: 80px;
         }
 
         .container {
-            padding-top: 120px;
-            padding-bottom: 60px;
+            margin-top: 2rem;
         }
 
-        /* 도서 정보 섹션 */
         .book-cover {
-            width: 100%;
-            max-width: 400px;
+            max-width: 300px;
+            height: auto;
+            box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+        }
+
+        .book-info {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            box-shadow: 0 3px 6px rgba(139, 69, 19, 0.1);
         }
 
         .book-info h2 {
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 15px;
         }
 
         .book-meta {
+            font-size: 1.1em;
             color: var(--text-dark);
             opacity: 0.8;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-
-        .book-description, .book-contents {
-            margin-top: 30px;
-        }
-
-        .book-description h4, .book-contents h4 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        /* 리뷰 섹션 */
-        .review-section {
-            margin-top: 50px;
-        }
-
-        .review-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 30px;
-        }
-
-        .review-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            margin-bottom: 12px;
         }
 
         .review-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--main-bg);
+            border: 1px solid var(--secondary-color);
+            padding: 25px;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 6px rgba(139, 69, 19, 0.15);
         }
 
         .review-header {
@@ -98,69 +69,109 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--secondary-color);
         }
 
         .review-content {
             font-size: 1.1em;
             line-height: 1.6;
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
 
         .review-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: var(--text-dark);
-            opacity: 0.7;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid var(--secondary-color);
         }
 
-        .rating {
-            color: var(--accent);
-            font-size: 1.2em;
-        }
-
-        /* 리뷰 폼 */
         .review-form {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--main-bg);
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(139, 69, 19, 0.1);
+            border: 1px solid var(--secondary-color);
             margin-top: 30px;
         }
 
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid var(--secondary-color);
-        }
-
-        /* 버튼 스타일 */
         .btn-primary {
             background-color: var(--primary-color);
             border: none;
-            padding: 10px 25px;
+            padding: 12px 30px;
             border-radius: 25px;
+            font-weight: 500;
             transition: all 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: var(--text-dark);
+            background-color: var(--secondary-color);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
         }
 
-        .btn-danger {
-            border-radius: 25px;
-            padding: 10px 25px;
+        .form-control, .form-select {
+            background-color: var(--main-bg);
+            border: 1px solid var(--secondary-color);
         }
 
-        /* 반응형 디자인 */
-        @media (max-width: 768px) {
-            .container {
-                padding-top: 100px;
-            }
+        .rating {
+            color: var(--accent);
+        }
 
-            .book-info h2 {
-                font-size: 2em;
-                margin-top: 20px;
-            }
+        .quote-card {
+            background: linear-gradient(145deg, #f4dec7, #f5e6d3);
+            border: none;
+            border-radius: 15px;
+            padding: 35px;
+            margin: 30px 0;
+            box-shadow: 
+                0 4px 15px rgba(139, 69, 19, 0.08),
+                inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .quote-content {
+            position: relative;
+            padding: 10px 30px;
+        }
+
+        .quote-content::before,
+        .quote-content::after {
+            content: '"';
+            font-family: Georgia, serif;
+            font-size: 4em;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+        }
+
+        .quote-content::before {
+            left: -10px;
+            top: -20px;
+        }
+
+        .quote-content::after {
+            right: -10px;
+            bottom: -50px;
+        }
+
+        .original-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin: 20px 0;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .page-number {
+            text-align: right;
+            font-size: 0.9em;
+            color: var(--primary-color);
+            margin-top: 15px;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -177,8 +188,6 @@
         boolean hasReviews = false;
         
         try {
-            conn = DriverManager.getConnection(url, username, password);
-            
             String sql = "SELECT * FROM books WHERE isbn = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, isbn);
@@ -187,6 +196,7 @@
             if(rs.next()) {
     %>
     <div class="container">
+        <!-- 도서 정보 섹션 -->
         <div class="row">
             <div class="col-md-4">
                 <img src="uploads/<%= rs.getString("cover_image") != null ? rs.getString("cover_image") : "default-book.jpg" %>" 
@@ -213,15 +223,54 @@
             </div>
         </div>
 
+        <!-- 도서 정보와 리뷰 섹션 사이에 추가 -->
+        <div class="book-quotes mt-5">
+            <h3 class="mb-4">명언</h3>
+            <%
+            String quotesSql = "SELECT * FROM famous_quotes WHERE book_id = ?";
+            PreparedStatement quotesPstmt = null;
+            ResultSet quotesRs = null;
+            
+            try {
+                quotesPstmt = conn.prepareStatement(quotesSql);
+                quotesPstmt.setInt(1, rs.getInt("id"));
+                quotesRs = quotesPstmt.executeQuery();
+                
+                if(quotesRs.next()) {
+            %>
+                <div class="quote-card">
+                    <div class="quote-content">
+                        <p class="original-text"><%= quotesRs.getString("original_text") %></p>
+                        <% if(quotesRs.getString("page_number") != null) { %>
+                            <p class="page-number text-muted">- p.<%= quotesRs.getString("page_number") %></p>
+                        <% } %>
+                    </div>
+                </div>
+            <%
+                } else {
+            %>
+                <p class="text-muted">등록된 명언이 없습니다.</p>
+            <%
+                }
+            } finally {
+                if(quotesRs != null) try { quotesRs.close(); } catch(Exception e) {}
+                if(quotesPstmt != null) try { quotesPstmt.close(); } catch(Exception e) {}
+            }
+            %>
+        </div>
+
         <!-- 리뷰 섹션 -->
         <div class="review-section">
             <h3>리뷰 목록</h3>
             <div class="review-list">
                 <%
-                // 리뷰 조회 쿼리 수정
-                sql = "SELECT r.*, u.username FROM book_reviews r JOIN users u ON r.user_id = u.id WHERE r.book_id = ? ORDER BY r.created_at DESC";
+                sql = "SELECT r.review_id, r.user_id, r.rating, r.content, r.created_at, u.username " +
+                      "FROM book_reviews r " +
+                      "JOIN users u ON r.user_id = u.id " +
+                      "WHERE r.book_id = ? " +
+                      "ORDER BY r.created_at DESC";
                 pstmt = conn.prepareStatement(sql);
-                pstmt.setInt(1, rs.getInt("id")); // book_id를 사용
+                pstmt.setInt(1, rs.getInt("id"));
                 reviewsRs = pstmt.executeQuery();
                 
                 while(reviewsRs.next()) {
@@ -241,7 +290,7 @@
                             <small class="review-date"><%= reviewsRs.getTimestamp("created_at") %></small>
                             <% if(isReviewAuthor || isAdmin) { %>
                                 <form action="deleteReview.jsp" method="post" style="display: inline;">
-                                    <input type="hidden" name="review_id" value="<%= reviewsRs.getInt("id") %>">
+                                    <input type="hidden" name="review_id" value="<%= reviewsRs.getInt("review_id") %>">
                                     <input type="hidden" name="isbn" value="<%= isbn %>">
                                     <button type="submit" class="btn btn-danger btn-sm">삭제</button>
                                 </form>
@@ -293,7 +342,7 @@
         <div class="mt-5">
             <a href="bookList.jsp" class="btn btn-secondary">목록으로 돌아가기</a>
             <% if(isAdmin) { %>
-                <a href="admin/editBook.jsp?isbn=<%= isbn %>" class="btn btn-primary">도서 정보 수정</a>
+                <a href="editBook.jsp?isbn=<%= isbn %>" class="btn btn-primary">도서 정보 수정</a>
                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                     도서 삭제
                 </button>
@@ -320,31 +369,25 @@
     
     <!-- 삭제 확인 모달 -->
     <% if(isAdmin) { %>
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">도서 삭제 확인</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">도서 삭제 확인</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    정말로 이 도서를 삭제하시겠습니까?
+                    <p>정말로 이 도서를 삭제하시겠습니까?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">소소</button>
-                    <form action="admin/deleteBook.jsp" method="post" style="display: inline;">
-                        <input type="hidden" name="isbn" value="<%= isbn %>">
-                        <button type="submit" class="btn btn-danger">삭제</button>
-                    </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <a href="deleteBook.jsp?isbn=<%= isbn %>" class="btn btn-danger">삭제</a>
                 </div>
             </div>
         </div>
     </div>
     <% } %>
-    
-    <jsp:include page="/includes/footer.jsp" />
-    
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

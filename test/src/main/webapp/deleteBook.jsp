@@ -4,7 +4,7 @@
     // 관리자 권한 확인
     String userRole = (String)session.getAttribute("role");
     if(!"admin".equals(userRole)) {
-        response.sendRedirect("../login.jsp");
+        response.sendRedirect("login.jsp");
         return;
     }
 
@@ -28,13 +28,25 @@
         if(rs.next()) {
             int bookId = rs.getInt("id");
             
-            // 2. 먼저 famous_quotes 테이블에서 관련 데이터 삭제
+            // 2. famous_quotes 테이블에서 관련 데이터 삭제
             String deleteQuotesSql = "DELETE FROM famous_quotes WHERE book_id = ?";
             pstmt = conn.prepareStatement(deleteQuotesSql);
             pstmt.setInt(1, bookId);
             pstmt.executeUpdate();
             
-            // 3. books 테이블에서 도서 삭제
+            // 3. book_reviews 테이블에서 관련 데이터 삭제
+            String deleteReviewsSql = "DELETE FROM book_reviews WHERE book_id = ?";
+            pstmt = conn.prepareStatement(deleteReviewsSql);
+            pstmt.setInt(1, bookId);
+            pstmt.executeUpdate();
+            
+            // 4. featured_books 테이블에서 관련 데이터 삭제
+            String deleteFeaturedSql = "DELETE FROM featured_books WHERE book_id = ?";
+            pstmt = conn.prepareStatement(deleteFeaturedSql);
+            pstmt.setInt(1, bookId);
+            pstmt.executeUpdate();
+            
+            // 5. books 테이블에서 도서 삭제
             String deleteBookSql = "DELETE FROM books WHERE id = ?";
             pstmt = conn.prepareStatement(deleteBookSql);
             pstmt.setInt(1, bookId);
@@ -43,7 +55,7 @@
         
         conn.commit(); // 트랜잭션 커밋
         session.setAttribute("message", "도서가 성공적으로 삭제되었습니다.");
-        response.sendRedirect("../bookList.jsp");
+        response.sendRedirect("bookList.jsp");
         
     } catch(Exception e) {
         if (conn != null) {
@@ -52,7 +64,7 @@
             } catch(Exception ex) {}
         }
         session.setAttribute("error", "도서 삭제 중 오류가 발생했습니다: " + e.getMessage());
-        response.sendRedirect("../bookDetail.jsp?isbn=" + isbn);
+        response.sendRedirect("bookDetail.jsp?isbn=" + isbn);
         
     } finally {
         if (rs != null) try { rs.close(); } catch(Exception e) {}

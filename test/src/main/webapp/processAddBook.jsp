@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.io.*" %>
+<%@ page import="java.io.File" %>
 <%@ include file="includes/dbConfig.jsp" %>
 
 <%
@@ -39,7 +38,6 @@
         
         // ISBN 중복 체크
         String isbn = multi.getParameter("isbn");
-        conn = DriverManager.getConnection(url, username, password);
         
         String checkSql = "SELECT COUNT(*) FROM books WHERE isbn = ?";
         pstmt = conn.prepareStatement(checkSql);

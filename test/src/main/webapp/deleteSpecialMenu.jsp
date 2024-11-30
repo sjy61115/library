@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.io.*" %>
+<%@ include file="includes/dbConfig.jsp" %>
 <%
     // 관리자 권한 체크
     if(session.getAttribute("role") == null || !"admin".equals(session.getAttribute("role"))) {
@@ -8,46 +7,30 @@
         return;
     }
 
-    String id = request.getParameter("id");
-    if(id == null || id.trim().isEmpty()) {
-        response.sendRedirect("manageSpecialMenu.jsp");
-        return;
+    String idStr = request.getParameter("id");
+    
+    if(idStr != null && !idStr.trim().isEmpty()) {
+        try {
+            int id = Integer.parseInt(idStr);
+            String sql = "DELETE FROM special_pages WHERE id = ?";
+            
+            try (PreparedStatement deleteStmt = conn.prepareStatement(sql)) {
+                deleteStmt.setInt(1, id);
+                int result = deleteStmt.executeUpdate();
+                
+                if(result > 0) {
+                    session.setAttribute("message", "특집 페이지가 성공적으로 삭제되었습니다.");
+                } else {
+                    session.setAttribute("error", "특집 페이지를 찾을 수 없습니다.");
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            session.setAttribute("error", "삭제 중 오류가 발생했습니다: " + e.getMessage());
+        }
+    } else {
+        session.setAttribute("error", "잘못된 요청입니다.");
     }
     
-    try {
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection conn = DriverManager.getConnection(
-            "jdbc:mysql://localhost:3306/library_db?useUnicode=true&characterEncoding=utf8",
-            "root", "1234"
-        );
-        
-        // 파일 경로 조회
-        String sql = "SELECT url FROM special_menu WHERE id=?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, id);
-        ResultSet rs = pstmt.executeQuery();
-        
-        if(rs.next()) {
-            // 파일 삭제
-            String fileName = rs.getString("url");
-            String realPath = application.getRealPath("/");
-            File file = new File(realPath + fileName);
-            if(file.exists()) {
-                file.delete();
-            }
-        }
-        
-        // DB에서 삭제
-        sql = "DELETE FROM special_menu WHERE id=?";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, id);
-        pstmt.executeUpdate();
-        
-        response.sendRedirect("manageSpecialMenu.jsp?success=true");
-        
-    } catch(Exception e) {
-        e.printStackTrace();
-        response.sendRedirect("manageSpecialMenu.jsp?error=true&message=" + 
-                            java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
-    }
+    response.sendRedirect("manageSpecialMenu.jsp");
 %> 

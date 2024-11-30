@@ -1,0 +1,61 @@
+.special-page {
+    background-color: var(--main-bg);
+    color: var(--text-dark);
+    min-height: 80vh;
+    padding: 2rem 0;
+}
+
+.special-page .card {
+    background: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.special-page .card-body {
+    padding: 2rem;
+}
+
+.special-page h2 {
+    color: var(--primary-color);
+    font-family: 'Crimson Text', serif;
+    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+}
+
+.special-content {
+    font-family: 'GmarketSans', sans-serif;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.special-meta {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* 관리자 페이지 스타일 */
+.admin-special .table {
+    background: white;
+    border-radius: 10px;
+}
+
+.admin-special .table th {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.admin-special .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.admin-special .btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+} 

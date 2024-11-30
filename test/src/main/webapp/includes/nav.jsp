@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="dbConfig.jsp" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nav.css">
 <nav class="main-nav">
     <div class="nav-container">
@@ -7,19 +8,50 @@
             <a href="${pageContext.request.contextPath}/">Home</a>
             <a href="${pageContext.request.contextPath}/bookList.jsp">Books</a>
             
+            <!-- 특집 메뉴 드롭다운 -->
+            <div class="custom-dropdown">
+                <button class="custom-dropdown-toggle nav-link" type="button">
+                    특집
+                </button>
+                <ul class="custom-dropdown-menu">
+                    <%
+                    try {
+                        String specialMenuSql = "SELECT id, menu_title FROM special_pages WHERE is_active = 1 ORDER BY menu_order ASC";
+                        PreparedStatement specialMenuStmt = conn.prepareStatement(specialMenuSql);
+                        ResultSet specialMenuRs = specialMenuStmt.executeQuery();
+                        
+                        while(specialMenuRs.next()) {
+                    %>
+                            <li>
+                                <a class="custom-dropdown-item" 
+                                   href="${pageContext.request.contextPath}/viewSpecialPage.jsp?id=<%= specialMenuRs.getInt("id") %>">
+                                    <%= specialMenuRs.getString("menu_title") %>
+                                </a>
+                            </li>
+                    <%
+                        }
+                        specialMenuRs.close();
+                        specialMenuStmt.close();
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    %>
+                </ul>
+            </div>
+            
             <!-- 로그인 상태에 따른 메뉴 표시 -->
             <% if(session.getAttribute("userId") != null) { %>
-                <div class="dropdown">
-                    <button class="dropdown-toggle nav-link" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="custom-dropdown">
+                    <button class="custom-dropdown-toggle nav-link" type="button">
                         <%= session.getAttribute("username") %>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/myPage.jsp">마이페이지</a></li>
+                    <ul class="custom-dropdown-menu">
+                        <li><a class="custom-dropdown-item" href="${pageContext.request.contextPath}/myPage.jsp">마이페이지</a></li>
                         <% if("admin".equals(session.getAttribute("role"))) { %>
-                            <li><a class="dropdown-item" href="${pageContext.request.contextPath}/dashboard.jsp">관리자</a></li>
+                            <li><a class="custom-dropdown-item" href="${pageContext.request.contextPath}/dashboard.jsp">관리자</a></li>
                         <% } %>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/logout.jsp">로그아웃</a></li>
+                        <li><hr class="custom-dropdown-divider"></li>
+                        <li><a class="custom-dropdown-item" href="${pageContext.request.contextPath}/logout.jsp">로그아웃</a></li>
                     </ul>
                 </div>
             <% } else { %>
@@ -31,40 +63,55 @@
 </nav>
 
 <style>
-    .dropdown {
+    .custom-dropdown {
         position: relative;
         display: inline-block;
     }
     
-    .dropdown-toggle {
+    .custom-dropdown-toggle {
         cursor: pointer;
         text-decoration: none;
         color: var(--text-light) !important;
         background: none;
         border: none;
-        font-size: 1.1em;
-        padding: 5px 0;
+        padding: 0;
+        font-size: inherit;
         font-family: inherit;
-        line-height: normal;
-        position: relative;
+        font-weight: inherit;
+        margin: 0 15px;
     }
     
-    .dropdown-toggle::after {
+    .nav-links {
+        display: flex;
+        align-items: center;
+    }
+    
+    .nav-links a,
+    .nav-links .custom-dropdown-toggle {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        text-decoration: none;
+        margin: 0 15px;
+        position: relative;
+        transition: color 0.3s ease;
+    }
+    
+    .custom-dropdown-toggle::after {
         content: '';
         position: absolute;
-        bottom: 0;
-        left: 0;
         width: 0;
-        height: 1px;
-        background: var(--text-light);
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background-color: var(--text-light);
         transition: width 0.3s ease;
     }
     
-    .dropdown-toggle:hover::after {
+    .custom-dropdown-toggle:hover::after {
         width: 100%;
     }
     
-    .dropdown-menu {
+    .custom-dropdown-menu {
         display: block;
         position: absolute;
         right: 0;
@@ -86,30 +133,24 @@
         margin: 0;
     }
     
-    .dropdown-menu li {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .dropdown-menu.show {
+    .custom-dropdown-menu.show {
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
     }
     
-    .dropdown-menu .dropdown-item {
+    .custom-dropdown-menu .custom-dropdown-item {
         display: block;
         padding: 8px 16px;
         text-decoration: none;
         color: var(--text-dark) !important;
     }
     
-    .dropdown-menu .dropdown-item:hover {
+    .custom-dropdown-menu .custom-dropdown-item:hover {
         background-color: rgba(139, 69, 19, 0.1);
     }
     
-    .dropdown-divider {
+    .custom-dropdown-divider {
         margin: 4px 0;
         border-top: 1px solid #8B4513;
     }
@@ -117,25 +158,26 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const dropdownToggle = document.querySelector('.dropdown-toggle');
-        if(dropdownToggle) {
-            dropdownToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const dropdownMenu = this.nextElementSibling;
-                dropdownMenu.classList.toggle('show');
-            });
+        const dropdowns = document.querySelectorAll('.custom-dropdown');
+        
+        dropdowns.forEach(dropdown => {
+            const button = dropdown.querySelector('.custom-dropdown-toggle');
+            const menu = dropdown.querySelector('.custom-dropdown-menu');
             
-            // 외부 클릭시 드롭다운 닫기
-            document.addEventListener('click', function(e) {
-                if(!e.target.matches('.dropdown-toggle')) {
-                    const dropdowns = document.getElementsByClassName('dropdown-menu');
-                    for(let dropdown of dropdowns) {
-                        if(dropdown.classList.contains('show')) {
-                            dropdown.classList.remove('show');
-                        }
-                    }
-                }
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                menu.classList.toggle('show');
             });
-        }
+        });
+        
+        // 외부 클릭시 모든 드롭다운 닫기
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.custom-dropdown')) {
+                document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
     });
 </script> 

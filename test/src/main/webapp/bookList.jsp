@@ -246,6 +246,37 @@
                 height: 300px;
             }
         }
+
+        .admin-actions {
+            margin: 40px 0;
+            padding: 0 40px;
+            text-align: left;
+        }
+
+        .add-book-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .add-book-btn:hover {
+            background-color: #6b3410;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(139, 69, 19, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .add-book-btn i {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -278,7 +309,7 @@
                 String category = request.getParameter("category");
                 
                 try {
-                    conn = DriverManager.getConnection(url, username, password);
+                    // conn = DriverManager.getConnection(url, username, password); // 이 줄 제거
                     
                     // 전체 레코드 수 조회
                     String countSql = "SELECT COUNT(*) FROM books b";
@@ -391,7 +422,7 @@
             <% if(isAdmin) { %>
             <div class="admin-actions">
                 <a href="./addBook.jsp" class="add-book-btn">
-                    <i class="bi bi-plus-circle me-2"></i>새 도서 등록
+                    <i class="bi bi-plus-lg"></i>새 도서 등록
                 </a>
             </div>
             <% } %>
